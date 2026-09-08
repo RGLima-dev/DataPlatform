@@ -24,6 +24,10 @@ x-airflow-common: &airflow-common
 services:
 
   jenkins:
+    build:
+      context: ./jenkins
+      dockerfile: Dockerfile
+
     image: jenkins/jenkins:lts-jdk21
     container_name: jenkins
 
