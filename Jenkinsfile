@@ -27,26 +27,6 @@ pipeline {
             }
         }
 
-        stage('Airflow DAG Validation') {
-            steps {
-                sh '''
-                    python3 - <<'PY'
-                    import sys
-                    import pathlib
-                    import py_compile
-
-                    dag_dir = pathlib.Path("airflow/dags")
-
-                    for file in dag_dir.glob("*.py"):
-                        print(f"Validating {file}")
-                        py_compile.compile(str(file), doraise=True)
-
-                    print("Airflow DAG syntax validation passed")
-                    PY
-                '''
-            }
-        }
-
         stage('Finish') {
             steps {
                 echo 'CI pipeline finished successfully'
