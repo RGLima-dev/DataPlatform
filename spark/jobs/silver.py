@@ -21,7 +21,7 @@ exploded_df = zipped_df.withColumn("weather_hour",F.explode("weather_hour"))
 
 
 silver_df = exploded_df.select(
-    F.lit("araraquara").alias("city"),
+    F.lit("araraquaraa").alias("city"),
     F.col("latitude"),
     F.col("longitude"),
     F.to_timestamp(F.col("weather_hour.time"),"yyyy-MM-dd'T'HH:mm").alias("weather_timestamp"),
