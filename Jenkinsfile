@@ -27,10 +27,32 @@ pipeline {
             }
         }
 
-        stage('Finish') {
-            steps {
-                echo 'CI pipeline finished successfully'
+        stage('Development Validation') {
+            when {
+                branch 'development'
             }
+            steps {
+                echo 'Running development branch validations'
+            }
+        }
+
+        stage('Main Validation') {
+            when {
+                branch 'main'
+            }
+            steps {
+                echo 'Running main branch validations'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'CI pipeline finished successfully'
+        }
+
+        failure {
+            echo 'CI pipeline failed'
         }
     }
 }
