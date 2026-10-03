@@ -40,4 +40,15 @@ with DAG(
                 }
     )
 
-    extract >> bronze >> silver
+    gold = SparkSubmitOperator(
+        task_id="gold",
+        application="/opt/spark/jobs/gold.py",
+        conn_id="spark_default",
+        name="weather-gold",
+        verbose=True,
+        conf={
+                    "spark.hadoop.fs.permissions.umask-mode":"002"
+                }
+    )
+
+    extract >> bronze >> silver >> gold
