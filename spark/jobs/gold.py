@@ -38,7 +38,3 @@ gold_df.show(truncate=False)
 gold_df.write \
     .mode("overwrite") \
     .parquet(GOLD_PATH)
-
-gold_df.show(5)
-import time
-time.sleep(360)
