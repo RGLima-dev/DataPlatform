@@ -21,7 +21,7 @@ exploded_df = zipped_df.withColumn("weather_hour",F.explode("weather_hour"))
 
 
 silver_df = exploded_df.select(
-    F.lit("araraquara").alias("city"),
+    F.col("city"),
     F.col("latitude"),
     F.col("longitude"),
     F.to_timestamp(F.col("weather_hour.time"),"yyyy-MM-dd'T'HH:mm").alias("weather_timestamp"),
@@ -32,7 +32,7 @@ silver_df = exploded_df.select(
     F.col("ingestion_timestamp"),
     F.col("source_file"),
 )
-silver_df.show(5)
+silver_df.select("city").distinct().show()
 silver_df.explain("formatted")
 
 
