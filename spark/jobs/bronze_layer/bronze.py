@@ -1,6 +1,5 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import current_timestamp, input_file_name
-import time
 
 spark = (
     SparkSession.builder
@@ -8,7 +7,7 @@ spark = (
     .getOrCreate()
 )
 
-RAW_PATH = "/opt/spark/data/raw/weather/*.json"
+RAW_PATH = "/opt/spark/data/raw/weather/*/*.json"
 BRONZE_PATH = "/opt/spark/data/bronze/weather"
 
 
@@ -28,11 +27,6 @@ df.printSchema()
 
 print("\n=== RAW DATA ===\n")
 
-df.show(
-    n=1,
-    truncate=False
-)
-
 
 bronze_df = (
     df
@@ -45,14 +39,14 @@ bronze_df = (
         input_file_name()
     )
 )
+bronze_df.select('city').distinct().show()
+
 
 (
     bronze_df.write
     .mode("overwrite")
     .parquet(BRONZE_PATH)
 )
-
-bronze_df.show(5)
 
 print(f"\nBronze successfully written to: {BRONZE_PATH}")
 spark.stop()
