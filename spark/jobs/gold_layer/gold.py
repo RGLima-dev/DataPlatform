@@ -1,4 +1,5 @@
 from pyspark.sql import SparkSession
+import time
 from pyspark.sql.functions import (
     avg,
     max,
@@ -14,7 +15,7 @@ spark = (
 )
 
 SILVER_PATH = "/opt/spark/data/silver/weather"
-GOLD_PATH = "/opt/spark/data/gold/weather_daily"
+GOLD_PATH = "/opt/spark/data/gold/weather" 
 
 
 silver_df = spark.read.parquet(SILVER_PATH)

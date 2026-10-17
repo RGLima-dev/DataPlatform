@@ -56,13 +56,12 @@ def get_weather(city_data:list[dict]):
 
         with urllib.request.urlopen(url) as response:
             data = json.loads(response.read().decode("utf-8"))
+            data["city"] = citie_data['city']
 
         output_dir = Path(f"/opt/spark/data/raw/weather/{citie_data['city']}")
         output_dir.mkdir(parents=True, exist_ok=True)
 
         output_file = output_dir / f"{citie_data['city']}_{timestamp}.json"
-        print(output_file)
-        print(data)
 
         with open(output_file, "w") as file:
             json.dump(data, file, indent=4)
