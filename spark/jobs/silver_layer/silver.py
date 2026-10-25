@@ -32,7 +32,7 @@ silver_df = exploded_df.select(
     F.col("ingestion_timestamp"),
     F.col("source_file"),
 )
-silver_df.select("city").distinct().show()
+silver_df.show()
 silver_df.explain("formatted")
 
 

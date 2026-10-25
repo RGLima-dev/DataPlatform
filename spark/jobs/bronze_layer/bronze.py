@@ -7,7 +7,7 @@ spark = (
     .getOrCreate()
 )
 
-RAW_PATH = "/opt/spark/data/raw/weather/*/*.json"
+RAW_PATH = "s3a://rods-data-platform-weather/raw/weather/"
 BRONZE_PATH = "/opt/spark/data/bronze/weather"
 
 
@@ -16,6 +16,8 @@ print("\n=== READING RAW JSON ===\n")
 df = (
     spark.read
     .option("multiLine", True)
+    .option("recursiveFileLookup", "true")
+    .option("pathGlobFilter", "*.json")
     .json(RAW_PATH)
 )
 
@@ -39,7 +41,7 @@ bronze_df = (
         input_file_name()
     )
 )
-bronze_df.select('city').distinct().show()
+bronze_df.show()
 
 
 (
