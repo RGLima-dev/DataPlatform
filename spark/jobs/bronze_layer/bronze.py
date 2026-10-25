@@ -1,5 +1,6 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import current_timestamp, input_file_name
+import os
 
 spark = (
     SparkSession.builder
@@ -7,7 +8,9 @@ spark = (
     .getOrCreate()
 )
 
-RAW_PATH = "s3a://rods-data-platform-weather/raw/weather/"
+S3_BUCKET_NAME = os.environ["S3_BUCKET_NAME"]
+
+RAW_PATH = "s3a://{S3_BUCKET_NAME}/raw/weather/"
 BRONZE_PATH = "/opt/spark/data/bronze/weather"
 
 
