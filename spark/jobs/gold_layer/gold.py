@@ -5,7 +5,8 @@ from pyspark.sql.functions import (
     max,
     min,
     sum,
-    to_date
+    to_date,
+    round
 )
 
 spark = (
@@ -14,7 +15,7 @@ spark = (
     .getOrCreate()
 )
 
-SILVER_PATH = "/opt/spark/data/silver/weather"
+SILVER_PATH = "/opt/spark/data/silver/weather/*"
 GOLD_PATH = "/opt/spark/data/gold/weather" 
 
 
@@ -25,11 +26,11 @@ gold_df = (
     .withColumn("date", to_date("weather_timestamp"))
     .groupBy("city", "date")
     .agg(
-        avg("temperature_c").alias("avg_temperature"),
-        max("temperature_c").alias("max_temperature"),
-        min("temperature_c").alias("min_temperature"),
-        avg("wind_speed_kmh").alias("avg_wind_speed"),
-        avg("humidity_pct").alias("avg_humidity")
+        round(avg("temperature_c"),2).alias("avg_temperature"),
+        round(max("temperature_c"),2).alias("max_temperature"),
+        round(min("temperature_c"),2).alias("min_temperature"),
+        round(avg("wind_speed_kmh"),2).alias("avg_wind_speed"),
+        round(avg("humidity_pct"),2).alias("avg_humidity")
     )
     .orderBy("date")
 )

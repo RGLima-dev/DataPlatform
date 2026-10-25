@@ -2,7 +2,9 @@ import pendulum
 
 from airflow.sdk import DAG
 from airflow.providers.standard.operators.bash import BashOperator
+from airflow.providers.standard.operators.python import PythonOperator
 from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOperator
+from extract_layer.extract import run_extraction
 
 
 with DAG(
@@ -13,14 +15,14 @@ with DAG(
     tags=["weather", "spark"],
 ) as dag:
 
-    extract = BashOperator(
+    extract = PythonOperator(
         task_id="extract_weather",
-        bash_command="python3 /opt/spark/jobs/extract.py",
+        python_callable=run_extraction
     )
 
     bronze = SparkSubmitOperator(
         task_id="bronze",
-        application="/opt/spark/jobs/bronze.py",
+        application="/opt/spark/jobs/bronze_layer/bronze.py",
         conn_id="spark_default",
         name="weather-bronze",
         verbose=True,
@@ -31,7 +33,7 @@ with DAG(
 
     silver = SparkSubmitOperator(
         task_id="silver",
-        application="/opt/spark/jobs/silver.py",
+        application="/opt/spark/jobs/silver_layer/silver.py",
         conn_id="spark_default",
         name="weather-silver",
         verbose=True,
@@ -42,7 +44,7 @@ with DAG(
 
     gold = SparkSubmitOperator(
         task_id="gold",
-        application="/opt/spark/jobs/gold.py",
+        application="/opt/spark/jobs/gold_layer/gold.py",
         conn_id="spark_default",
         name="weather-gold",
         verbose=True,

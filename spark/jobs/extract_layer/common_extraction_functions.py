@@ -3,6 +3,8 @@ import urllib.parse
 import urllib.request
 from datetime import datetime
 from pathlib import Path
+import boto3
+import os
 
 GEOCODING_URL = "https://geocoding-api.open-meteo.com/v1/search"
 FORECAST_URL = "https://api.open-meteo.com/v1/forecast"
@@ -37,6 +39,9 @@ def get_cities_cordinates(city_name:list[str]):
 
 
 def get_weather(city_data:list[dict]):
+    s3 = boto3.client("s3")
+    bucket_name = os.environ["S3_BUCKET_NAME"]
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
     for citie_data in city_data:
@@ -61,9 +66,17 @@ def get_weather(city_data:list[dict]):
         output_dir = Path(f"/opt/spark/data/raw/weather/{citie_data['city']}")
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        output_file = output_dir / f"{citie_data['city']}_{timestamp}.json"
+        s3_key = (
+            f"raw/weather/"
+            f"{citie_data['city']}/"
+            f"{citie_data['city']}_{timestamp}.json"
+        )
 
-        with open(output_file, "w") as file:
-            json.dump(data, file, indent=4)
+        s3.put_object(
+            Bucket=bucket_name,
+            Key=s3_key,
+            Body=json.dumps(data,ensure_ascii=False,indent=4),
+            ContentType="application/json",
+        )
 
-        print(f"Raw file written to: {output_file}")
+        print(f"Written to s3://{bucket_name}/{s3_key}")
