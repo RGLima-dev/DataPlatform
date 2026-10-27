@@ -10,8 +10,8 @@ spark = (
 
 S3_BUCKET_NAME = os.environ["S3_BUCKET_NAME"]
 
-RAW_PATH = "s3a://{S3_BUCKET_NAME}/raw/weather/"
-BRONZE_PATH = "/opt/spark/data/bronze/weather"
+RAW_PATH = f"s3a://{S3_BUCKET_NAME}/raw/weather/"
+BRONZE_PATH = f"s3a://{S3_BUCKET_NAME}/bronze/weather/"
 
 
 print("\n=== READING RAW JSON ===\n")

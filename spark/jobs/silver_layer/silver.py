@@ -1,11 +1,14 @@
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 import time
+import os
 
 spark = (SparkSession.builder.appName("Weather-silver").getOrCreate())
 
-BRONZE_PATH = "/opt/spark/data/bronze/weather"
-SILVER_PATH = "/opt/spark/data/silver/weather"
+S3_BUCKET_NAME = os.environ["S3_BUCKET_NAME"]
+
+BRONZE_PATH = f"s3a://{S3_BUCKET_NAME}/bronze/weather/"
+SILVER_PATH = f"s3a://{S3_BUCKET_NAME}/silver/weather/"
 
 bronze_df = spark.read.parquet(BRONZE_PATH)
 
@@ -32,9 +35,6 @@ silver_df = exploded_df.select(
     F.col("ingestion_timestamp"),
     F.col("source_file"),
 )
-silver_df.show()
-silver_df.explain("formatted")
-
 
 #Writing to silver path
 silver_df.write.mode("overwrite").parquet(SILVER_PATH)
