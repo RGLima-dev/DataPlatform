@@ -4,3 +4,10 @@ airflow/logs/
 __pycache__/
 *.pyc
 *.log
+
+# dbt generated files
+dbt/logs/
+dbt/target/
+
+# Python virtual env
+.venv-dbt/
