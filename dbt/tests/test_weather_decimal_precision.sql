@@ -1,0 +1,6 @@
+SELECT *
+FROM {{ ref('stg_weather') }}
+WHERE
+       TEMPERATURE_C != round(TEMPERATURE_C, 2)
+    OR PRECIPITATION_MM != round(PRECIPITATION_MM, 2)
+    OR WIND_SPEED_KMH != round(WIND_SPEED_KMH, 2)
