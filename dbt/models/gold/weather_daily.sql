@@ -1,15 +1,15 @@
 select
     city,
-    date(weather_timestamp) as weather_date,
-    avg(temperature_c) as avg_temperature,
-    max(temperature_c) as max_temperature,
-    min(temperature_c) as min_temperature,
-    avg(humidity_pct) as avg_humidity,
-    avg(wind_speed_kmh) as avg_wind_speed,
-    sum(precipitation_mm) as total_precipitation
+    WEATHER_DATE,
+    ROUND(AVG(TEMPERATURE_C),2) as avg_temperature,
+    ROUND(MAX(TEMPERATURE_C),2) as max_temperature,
+    ROUND(min(TEMPERATURE_C),2) as min_temperature,
+    ROUND(avg(HUMIDITY_PCT),2) as avg_humidity,
+    ROUND(avg(WIND_SPEED_KMH),2) as avg_wind_speed,
+    ROUND(sum(PRECIPITATION_MM),2) as total_precipitation
 
-from {{ source('weather', 'silver_weather') }}
+from {{ref('stg_weather')}}
 
 group by
-    city,
-    date(weather_timestamp)
+    CITY,
+    WEATHER_DATE
