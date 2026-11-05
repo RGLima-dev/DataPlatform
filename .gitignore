@@ -8,6 +8,8 @@ __pycache__/
 # dbt generated files
 dbt/logs/
 dbt/target/
+#dbt logs
+dbt/.user.yml
 
 # Python virtual env
 .venv-dbt/
