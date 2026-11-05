@@ -27,6 +27,22 @@ pipeline {
             }
         }
 
+        stage('dbt Debug') {
+            environment {
+                AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')
+                AWS_SECRET_ACCESS_KEY = credentials('SecretAccessKey')
+                AWS_DEFAULT_REGION = 'us-east-1'
+            }
+
+            steps {
+                dir('dbt') {
+                    sh '''
+                        dbt debug --profiles-dir .
+                    '''
+                }
+            }
+        }
+
         stage('Development Validation') {
             when {
                 branch 'development'
